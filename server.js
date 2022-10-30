@@ -2,7 +2,9 @@ const smart = require("fhirclient");
 const session = require("express-session");
 const fhirJs = require("fhir.js");
 const app = require("express")();
+const cors = require('cors')
 
+app.use(cors())
 // The SMART state is stored in a session. If you want to clear your session
 // and start over, you will have to delete your "connect.sid" cookie!
 app.use(
@@ -20,12 +22,10 @@ const smartSettings = {
 };
 
 app.get("/", (req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin: ', 'http://localhost:3001')
   smart(req, res).authorize(smartSettings).catch(next);
 });
 
 app.get("/app", async (req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin: ', 'http://localhost:3001')
   const client = await smart(req, res).ready();
   client.connect(fhirJs);
   client.api

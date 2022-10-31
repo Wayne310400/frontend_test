@@ -3,22 +3,24 @@ import logo from "./logo.svg";
 import Axios from 'axios';
 import "./App.css";
 import FHIR from "fhirclient"
+import { useState, useEffect } from 'react';
 
 function App() {
-  const [data, setData] = React.useState(null);
+  const [data, setData] = useState(null);
+  const [posts, setPosts] = useState([]);
 
-  const onSubmit = () => {
-    Axios.get('http://localhost:8080/')
-    .then(res => console.log(res))
-    .catch(err => {
-      if (err.response.status === 401) {
-        //Auth failed
-        //Call reentry function
-        return;
-      }
-      return console.log(err)
+  const onSubmit = (e) => {
+    fetch('http://hapi.fhir.org/baseR4/Patient/45276')
+    .then((res) => res.json())
+    .then((data) => {
+       console.log(data);
+       setPosts(data);
+       setData(data.resourceType);
     })
-}
+    .catch((err) => {
+       console.log(err.message);
+    });
+  }
 
   return (
     <div className="App" >
